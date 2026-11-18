@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizza Planet — Taller de Promesas y APIs</title>
+  <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex">
+
+  <aside id="sidebar" class="w-64 min-h-screen bg-slate-900 border-r border-slate-800 fixed top-0 left-0 z-40 flex flex-col transition-transform duration-300 -translate-x-full">
+    <div class="p-5 border-b border-slate-800">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🍕</span>
+        <h1 class="text-xl font-extrabold tracking-tight">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-red-400 to-amber-400">Pizza Planet</span>
+        </h1>
+      </div>
+      <p class="text-xs text-slate-500 mt-1">Taller de Promesas y APIs</p>
+    </div>
+    <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-0.5" id="nav-menu">
+      <a href="#home" data-page="home" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>🍕</span> Inicio
+      </a>
+      <a href="#promise-basica" data-page="promise-basica" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>1️⃣</span> Taller 1 · Promise básica
+      </a>
+      <a href="#promise-array" data-page="promise-array" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>2️⃣</span> Taller 2 · Promise + lista
+      </a>
+      <a href="#promise-all" data-page="promise-all" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>3️⃣</span> Taller 3 · Promise.all
+      </a>
+      <a href="#promise-allsettled" data-page="promise-allsettled" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>4️⃣</span> Taller 4 · Promise.allSettled
+      </a>
+      <a href="#promise-race" data-page="promise-race" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>5️⃣</span> Taller 5 · Promise.race
+      </a>
+      <a href="#promise-any" data-page="promise-any" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>6️⃣</span> Taller 6 · Promise.any
+      </a>
+      <a href="#maquina-estados" data-page="maquina-estados" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>7️⃣</span> Taller 7 · Máquina de Estados
+      </a>
+      <a href="#async-await" data-page="async-await" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>8️⃣</span> Taller 8 · async y await
+      </a>
+      <div class="border-t border-slate-800 my-3"></div>
+      <a href="#videos" data-page="videos" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>9️⃣</span> Taller 9 · Cámara
+      </a>
+      <a href="#reportes" data-page="reportes" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>🔟</span> Taller 10 · Reportes
+      </a>
+      <a href="#geolocalizacion" data-page="geolocalizacion" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>📍</span> Taller 11 · Geolocalización
+      </a>
+      <div class="border-t border-slate-800 my-3"></div>
+      <a href="#reto-final" data-page="reto-final" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+        <span>🏆</span> Reto Final
+      </a>
+    </nav>
+    <div class="p-3 border-t border-slate-800">
+      <button id="sidebar-toggle" class="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs text-slate-500 hover:text-white bg-slate-800 rounded-lg transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        Cerrar menú
+      </button>
+    </div>
+  </aside>
+
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+  <main id="main-content" class="flex-1 min-h-screen transition-all duration-300">
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-10">
+      <div class="flex items-center justify-between px-4 py-3">
+         <button id="mobile-menu-btn" class="p-2 text-slate-400 hover:text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <h2 id="page-title" class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400">🍕 Inicio</h2>
+        <div class="w-10"></div>
+      </div>
+    </header>
+
+    <div id="page-content" class="max-w-5xl mx-auto px-4 py-8 space-y-8">
+
+      <!-- HOME -->
+      <section id="page-home" class="page-section animate-fade-in">
+        <div class="relative pp-card p-6 mb-8 overflow-hidden">
+          <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-orange-500/20 blur-3xl"></div>
+          <div class="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-red-500/20 blur-3xl"></div>
+          <div class="relative flex items-start gap-4">
+            <span class="text-5xl" style="animation: float 3s ease-in-out infinite; display:inline-block;">🍕</span>
+            <div>
+              <h2 class="text-3xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-red-400 to-amber-400">Bienvenido a Pizza Planet</h2>
+              <p class="text-slate-400 leading-relaxed">Imagina que le pides una pizza a una aplicación. Tú haces el pedido y no te quedas mirando la puerta durante 30 minutos. Mientras esperas, puedes hacer otras cosas. Una <strong class="text-orange-300">Promise</strong> funciona de manera parecida: <em class="text-slate-300">"Te prometo que voy a buscar la información. Cuando la tenga, te aviso si salió bien o si ocurrió un problema".</em></p>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/30 to-orange-500/30 flex items-center justify-center text-lg mb-3">1️⃣</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-orange-300 transition-colors">Promise básica</h3>
+            <p class="text-sm text-slate-400">Pedir una publicación: fetch() + .then() + .catch() + .finally()</p>
+          </div>
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/30 to-cyan-500/30 flex items-center justify-center text-lg mb-3">2️⃣</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">Promise + lista</h3>
+            <p class="text-sm text-slate-400">Pedir varios usuarios y recorrer la lista</p>
+          </div>
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/30 to-fuchsia-500/30 flex items-center justify-center text-lg mb-3">3️⃣</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">Promise.all</h3>
+            <p class="text-sm text-slate-400">Publicación + Autor + Comentarios — todo o nada</p>
+          </div>
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/30 to-yellow-500/30 flex items-center justify-center text-lg mb-3">4️⃣</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">Promise.allSettled</h3>
+            <p class="text-sm text-slate-400">Revisar qué funcionó y qué falló</p>
+          </div>
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500/30 to-pink-500/30 flex items-center justify-center text-lg mb-3">5️⃣</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-rose-300 transition-colors">Promise.race</h3>
+            <p class="text-sm text-slate-400">El primero en terminar gana</p>
+          </div>
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/30 to-teal-500/30 flex items-center justify-center text-lg mb-3">6️⃣</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">Promise.any</h3>
+            <p class="text-sm text-slate-400">El primer éxito importa</p>
+          </div>
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500/30 to-rose-500/30 flex items-center justify-center text-lg mb-3">7️⃣</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-pink-300 transition-colors">Máquina de Estados</h3>
+            <p class="text-sm text-slate-400">UI reactiva PENDIENTE / ENCONTRADO / ERROR</p>
+          </div>
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/30 to-purple-500/30 flex items-center justify-center text-lg mb-3">8️⃣</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">async y await</h3>
+            <p class="text-sm text-slate-400">Código legible con Promesas + try/catch</p>
+          </div>
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/30 to-green-500/30 flex items-center justify-center text-lg mb-3">9️⃣</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">Cámara</h3>
+            <p class="text-sm text-slate-400">Encender la cámara y tomar una foto</p>
+          </div>
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500/30 to-amber-500/30 flex items-center justify-center text-lg mb-3">🔟</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-orange-300 transition-colors">Reportes</h3>
+            <p class="text-sm text-slate-400">Generar, descargar e imprimir reportes</p>
+          </div>
+          <div class="pp-card p-5 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500/30 to-emerald-500/30 flex items-center justify-center text-lg mb-3">📍</div>
+            <h3 class="font-bold text-white mb-2 group-hover:text-teal-300 transition-colors">Geolocalización</h3>
+            <p class="text-sm text-slate-400">Ubicación del usuario en un mapa</p>
+          </div>
+          <div class="pp-card p-5 group border-red-800/60 bg-gradient-to-br from-red-950/60 to-orange-950/40">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/40 to-amber-500/40 flex items-center justify-center text-lg mb-3">🏆</div>
+            <h3 class="font-bold text-orange-300 mb-2 group-hover:text-amber-300 transition-colors">Reto Final</h3>
+            <p class="text-sm text-slate-400">Super explorador de APIs con todo lo aprendido</p>
+          </div>
+        </div>
+
+        <!-- TABLA PARA RECORDAR -->
+        <div class="mt-10">
+          <h2 class="text-2xl font-extrabold mb-5 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400">🧠 Tabla para recordar</h2>
+          <div class="pp-card border-slate-700/50 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="bg-slate-800/70 text-left">
+                    <th class="px-5 py-3 font-semibold text-orange-300">Herramienta</th>
+                    <th class="px-5 py-3 font-semibold text-orange-300">Explicación para niños</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800">
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">Promise</td><td class="px-5 py-3 text-slate-300">Una promesa de que llegará una respuesta</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">.then()</td><td class="px-5 py-3 text-slate-300">Cuando termine, haz esto</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">.catch()</td><td class="px-5 py-3 text-slate-300">Si algo sale mal, haz esto</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">.finally()</td><td class="px-5 py-3 text-slate-300">Pase lo que pase, haz esto al final</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">async</td><td class="px-5 py-3 text-slate-300">Esta función trabaja con Promesas</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">await</td><td class="px-5 py-3 text-slate-300">Espera el resultado</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">Promise.all()</td><td class="px-5 py-3 text-slate-300">Esperar a que todos terminen</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">Promise.allSettled()</td><td class="px-5 py-3 text-slate-300">Revisar cómo terminó cada uno</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">Promise.race()</td><td class="px-5 py-3 text-slate-300">Gana el primero que termine</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">Promise.any()</td><td class="px-5 py-3 text-slate-300">Gana el primero que tenga éxito</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">fetch()</td><td class="px-5 py-3 text-slate-300">Pedir información a Internet</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">API</td><td class="px-5 py-3 text-slate-300">Un servicio que nos entrega información</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">try/catch</td><td class="px-5 py-3 text-slate-300">Intentar algo y atrapar errores</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">getUserMedia()</td><td class="px-5 py-3 text-slate-300">Pedir acceso a cámara o micrófono</td></tr>
+                  <tr class="hover:bg-slate-800/40 transition-colors"><td class="px-5 py-3 font-mono text-red-300">Geolocalización</td><td class="px-5 py-3 text-slate-300">Obtener la ubicación del dispositivo</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROMISE BASICA -->
+      <section id="page-promise-basica" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-2 py-1 rounded">Taller 1</span>
+          <h2 class="text-xl font-bold">Mi primera Promise: Obtener 1 publicación 🍕</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Usamos <code class="bg-slate-800 px-1.5 py-0.5 rounded text-emerald-300">fetch()</code>, que devuelve una Promise. Encadenamos <code class="bg-slate-800 px-1.5 py-0.5 rounded text-emerald-300">.then()</code> para procesar la respuesta. <strong class="text-white">⭐ Reto:</strong> prueba con las publicaciones 1, 2, 3 y 10.</p>
+        <div class="flex gap-2 mb-4">
+          <input type="number" id="single-post-id" value="1" min="1" max="100"
+                 class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          <label class="py-2 text-sm text-slate-400">Cargar la publicación nº</label>
+          <button id="load-post-btn" class="pp-btn">Cargar</button>
+        </div>
+        <div id="single-post" class="pp-card p-6 border-slate-700/50">
+          <p class="text-slate-500">Cargando publicación...</p>
+        </div>
+        <details class="concept-code mt-4 pp-card border-slate-700/50 overflow-hidden">
+          <summary class="cursor-pointer list-none px-5 py-3 flex items-center gap-2 font-semibold text-sm text-slate-300 hover:text-orange-300 transition-colors">
+            <span>📘</span> Ver el código (Promise, .then, .catch, .finally)
+            <span class="ml-auto text-xs text-slate-500">clic para abrir</span>
+          </summary>
+          <pre id="code-promise-basica" class="px-5 py-4 text-xs leading-relaxed overflow-x-auto"></pre>
+        </details>
+      </section>
+
+      <!-- PROMISE ARRAY -->
+      <section id="page-promise-array" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-blue-500/10 text-blue-400 text-xs font-bold px-2 py-1 rounded">Taller 2</span>
+          <h2 class="text-xl font-bold">Una Promise con una lista: Usuarios 🧑‍🤝‍🧑</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">La API devuelve una LISTA de usuarios. Usamos <code class="bg-slate-800 px-1.5 py-0.5 rounded text-emerald-300">.map()</code> para convertir cada usuario en una tarjeta. <strong class="text-white">⭐ Reto:</strong> prueba con 3, 5 y 10 usuarios.</p>
+        <div class="flex gap-2 mb-4">
+          <input type="number" id="users-limit" value="5" min="1" max="10"
+                 class="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500">
+          <label class="py-2 text-sm text-slate-400">usuarios</label>
+          <button id="load-users-btn" class="pp-btn">Cargar</button>
+        </div>
+        <div id="users-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <p class="text-slate-500 col-span-full">Cargando usuarios...</p>
+        </div>
+        <details class="concept-code mt-4 pp-card border-slate-700/50 overflow-hidden">
+          <summary class="cursor-pointer list-none px-5 py-3 flex items-center gap-2 font-semibold text-sm text-slate-300 hover:text-blue-400 transition-colors">
+            <span>📘</span> Ver el código (una Promise con una lista)
+            <span class="ml-auto text-xs text-slate-500">clic para abrir</span>
+          </summary>
+          <pre id="code-promise-array" class="px-5 py-4 text-xs leading-relaxed overflow-x-auto"></pre>
+        </details>
+      </section>
+
+      <!-- PROMISE ALL -->
+      <section id="page-promise-all" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-purple-500/10 text-purple-400 text-xs font-bold px-2 py-1 rounded">Taller 3</span>
+          <h2 class="text-xl font-bold">Promise.all: Post + Autor + Comentarios</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Disparamos 3 peticiones en paralelo. Si una falla, todo falla. Es atómico: "todo o nada".</p>
+        <div id="combined-data" class="pp-card p-6 border-slate-700/50">
+          <p class="text-slate-500">Cargando datos combinados...</p>
+        </div>
+        <details class="concept-code mt-4 pp-card border-slate-700/50 overflow-hidden">
+          <summary class="cursor-pointer list-none px-5 py-3 flex items-center gap-2 font-semibold text-sm text-slate-300 hover:text-purple-400 transition-colors">
+            <span>📘</span> Ver el código (Promise.all)
+            <span class="ml-auto text-xs text-slate-500">clic para abrir</span>
+          </summary>
+          <pre id="code-promise-all" class="px-5 py-4 text-xs leading-relaxed overflow-x-auto"></pre>
+        </details>
+      </section>
+
+      <!-- PROMISE ALLSETTLED -->
+      <section id="page-promise-allsettled" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-amber-500/10 text-amber-400 text-xs font-bold px-2 py-1 rounded">Taller 4</span>
+          <h2 class="text-xl font-bold">Promise.allSettled: 5 posts independientes</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Disparamos 5 peticiones. Si una falla, las demás siguen funcionando. Nunca rechaza.</p>
+        <div id="settled-posts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <p class="text-slate-500 col-span-full">Cargando posts...</p>
+        </div>
+        <details class="concept-code mt-4 pp-card border-slate-700/50 overflow-hidden">
+          <summary class="cursor-pointer list-none px-5 py-3 flex items-center gap-2 font-semibold text-sm text-slate-300 hover:text-amber-400 transition-colors">
+            <span>📘</span> Ver el código (Promise.allSettled)
+            <span class="ml-auto text-xs text-slate-500">clic para abrir</span>
+          </summary>
+          <pre id="code-promise-allsettled" class="px-5 py-4 text-xs leading-relaxed overflow-x-auto"></pre>
+        </details>
+      </section>
+
+      <!-- PROMISE RACE -->
+      <section id="page-promise-race" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-rose-500/10 text-rose-400 text-xs font-bold px-2 py-1 rounded">Taller 5</span>
+          <h2 class="text-xl font-bold">Promise.race: Carrera contra el tiempo</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Competimos: la petición a la API vs un temporizador de 2 segundos.</p>
+        <div id="race-result" class="pp-card p-6 border-slate-700/50">
+          <p class="text-slate-500">Esperando resultado de la carrera...</p>
+        </div>
+        <details class="concept-code mt-4 pp-card border-slate-700/50 overflow-hidden">
+          <summary class="cursor-pointer list-none px-5 py-3 flex items-center gap-2 font-semibold text-sm text-slate-300 hover:text-rose-400 transition-colors">
+            <span>📘</span> Ver el código (Promise.race)
+            <span class="ml-auto text-xs text-slate-500">clic para abrir</span>
+          </summary>
+          <pre id="code-promise-race" class="px-5 py-4 text-xs leading-relaxed overflow-x-auto"></pre>
+        </details>
+      </section>
+
+      <!-- PROMISE ANY -->
+      <section id="page-promise-any" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-cyan-500/10 text-cyan-400 text-xs font-bold px-2 py-1 rounded">Taller 6</span>
+          <h2 class="text-xl font-bold">Promise.any: El primer resultado exitoso</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Intentamos 3 endpoints. Nos quedamos con el primero que tenga éxito.</p>
+        <div id="any-result" class="pp-card p-6 border-slate-700/50">
+          <p class="text-slate-500">Buscando el primer éxito...</p>
+        </div>
+        <details class="concept-code mt-4 pp-card border-slate-700/50 overflow-hidden">
+          <summary class="cursor-pointer list-none px-5 py-3 flex items-center gap-2 font-semibold text-sm text-slate-300 hover:text-cyan-400 transition-colors">
+            <span>📘</span> Ver el código (Promise.any)
+            <span class="ml-auto text-xs text-slate-500">clic para abrir</span>
+          </summary>
+          <pre id="code-promise-any" class="px-5 py-4 text-xs leading-relaxed overflow-x-auto"></pre>
+        </details>
+      </section>
+
+      <!-- MAQUINA DE ESTADOS -->
+      <section id="page-maquina-estados" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-pink-500/10 text-pink-400 text-xs font-bold px-2 py-1 rounded">Taller 7</span>
+          <h2 class="text-xl font-bold">La máquina de estados: Buscar posts por usuario</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Campo de búsqueda con estados visuales: <span class="text-yellow-400">PENDIENTE</span> → <span class="text-green-400">ENCONTRADO</span> o <span class="text-red-400">ERROR</span>.</p>
+        <div class="pp-card p-6 border-slate-700/50">
+          <div class="flex gap-2 mb-4">
+            <input type="number" id="user-id-input" placeholder="Nº de usuario (1-10)" min="1" max="10"
+                   class="flex-grow px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500">
+            <button id="search-btn" class="pp-btn flex items-center gap-2">
+              <span id="btn-text">Buscar</span>
+              <svg id="btn-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+            </button>
+          </div>
+          <div id="search-status" class="hidden mb-3 p-3 rounded-lg text-sm font-medium"></div>
+          <div id="search-results" class="space-y-2"></div>
+        </div>
+        <details class="concept-code mt-4 pp-card border-slate-700/50 overflow-hidden">
+          <summary class="cursor-pointer list-none px-5 py-3 flex items-center gap-2 font-semibold text-sm text-slate-300 hover:text-pink-400 transition-colors">
+            <span>📘</span> Ver el código (la máquina de estados)
+            <span class="ml-auto text-xs text-slate-500">clic para abrir</span>
+          </summary>
+          <pre id="code-maquina-estados" class="px-5 py-4 text-xs leading-relaxed overflow-x-auto"></pre>
+        </details>
+      </section>
+
+      <!-- VIDEOS -->
+      <section id="page-videos" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-rose-500/10 text-rose-400 text-xs font-bold px-2 py-1 rounded">Taller 9</span>
+          <h2 class="text-xl font-bold">📷 Encender la cámara</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Accede a la cámara del dispositivo y captura una fotografía usando <code class="bg-slate-800 px-1.5 py-0.5 rounded text-emerald-300">getUserMedia()</code>, que devuelve una Promise. El navegador pedirá permiso.</p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div class="pp-card p-4 border-slate-700/50">
+            <h3 class="font-bold text-white mb-3">📷 Vista previa de cámara</h3>
+            <video id="video-preview" class="w-full rounded-lg bg-slate-800" autoplay playsinline></video>
+            <div class="flex gap-2 mt-3">
+              <button id="start-camera" class="pp-btn">Iniciar cámara</button>
+              <button id="stop-camera" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-semibold rounded-lg text-sm transition-colors hidden">Detener</button>
+              <button id="capture-photo" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg text-sm transition-colors hidden">Capturar foto</button>
+            </div>
+          </div>
+          <div class="pp-card p-4 border-slate-700/50">
+            <h3 class="font-bold text-white mb-3">🖼️ Foto capturada</h3>
+            <canvas id="photo-canvas" class="w-full rounded-lg bg-slate-800 hidden"></canvas>
+            <div id="photo-status" class="text-slate-500 text-sm">No hay foto capturada</div>
+            <div class="mt-3 space-y-2">
+              <div id="video-info" class="text-xs text-slate-500 space-y-1"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REPORTES -->
+      <section id="page-reportes" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-indigo-500/10 text-indigo-400 text-xs font-bold px-2 py-1 rounded">Taller 10</span>
+          <h2 class="text-xl font-bold">📊 Crear un reporte</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Genera un reporte con los datos obtenidos de la API. Puedes descargarlo como archivo de texto o imprimirlo.</p>
+        <div class="pp-card p-6 border-slate-700/50">
+          <div class="flex flex-wrap gap-2 mb-4">
+            <button id="gen-report-users" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg text-sm transition-colors">Reporte de Usuarios</button>
+            <button id="gen-report-posts" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-lg text-sm transition-colors">Reporte de Publicaciones</button>
+            <button id="gen-report-combined" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg text-sm transition-colors">Reporte Combinado</button>
+            <button id="download-report" class="pp-btn hidden">⬇ Descargar Reporte</button>
+            <button id="print-report" class="px-4 py-2 bg-slate-600 hover:bg-slate-500 text-white font-semibold rounded-lg text-sm transition-colors hidden">🖨 Imprimir</button>
+          </div>
+          <div id="report-preview" class="bg-slate-800/50 rounded-lg p-4 text-sm text-slate-300 font-mono max-h-96 overflow-y-auto">
+            <p class="text-slate-500">Haz clic en un botón para generar un reporte...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GEOLOCALIZACION -->
+      <section id="page-geolocalizacion" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-teal-500/10 text-teal-400 text-xs font-bold px-2 py-1 rounded">Taller 11</span>
+          <h2 class="text-xl font-bold">📍 Geolocalización</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Obtén la ubicación del usuario usando la API de geolocalización del navegador. Muestra la posición en un mapa de OpenStreetMap.</p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div class="pp-card p-4 border-slate-700/50 space-y-4">
+            <button id="get-location" class="pp-btn w-full">📡 Obtener ubicación</button>
+            <div id="geo-info" class="space-y-2 text-sm">
+              <p class="text-slate-500">No se ha obtenido ubicación aún.</p>
+            </div>
+            <div id="geo-error" class="hidden p-3 bg-red-950/40 border border-red-800/60 rounded-lg text-red-400 text-sm"></div>
+          </div>
+          <div class="pp-card p-4 border-slate-700/50">
+            <h3 class="font-bold text-white mb-3">🗺️ Mapa</h3>
+            <div id="map-container" class="rounded-lg overflow-hidden bg-slate-800" style="height: 300px;">
+              <iframe id="map-frame" class="w-full h-full border-0" src="about:blank" title="Mapa de ubicación"></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TALLER 8: ASYNC / AWAIT -->
+      <section id="page-async-await" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-indigo-500/10 text-indigo-400 text-xs font-bold px-2 py-1 rounded">Taller 8</span>
+          <h2 class="text-xl font-bold">async y await: Buscar posts por usuario 🍕</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Una función <code class="bg-slate-800 px-1.5 py-0.5 rounded text-emerald-300">async</code> trabaja con Promesas. Usamos <code class="bg-slate-800 px-1.5 py-0.5 rounded text-emerald-300">await</code> para esperar el resultado y <code class="bg-slate-800 px-1.5 py-0.5 rounded text-emerald-300">try/catch</code> para capturar errores. Es una forma más legible de leer código con Promesas.</p>
+        <div class="pp-card p-6 border-slate-700/50">
+          <div class="flex gap-2 mb-4">
+            <input type="number" id="async-user-id" placeholder="Nº de usuario (1-10)" min="1" max="10" value="1"
+                   class="flex-grow px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500">
+            <button id="async-btn" class="pp-btn">Buscar publicaciones</button>
+          </div>
+          <div id="async-results" class="space-y-2">
+            <p class="text-slate-500">Introduce un número de usuario y pulsa "Buscar publicaciones".</p>
+          </div>
+        </div>
+        <details class="concept-code mt-4 pp-card border-slate-700/50 overflow-hidden">
+          <summary class="cursor-pointer list-none px-5 py-3 flex items-center gap-2 font-semibold text-sm text-slate-300 hover:text-indigo-400 transition-colors">
+            <span>📘</span> Ver el código (async, await y try/catch)
+            <span class="ml-auto text-xs text-slate-500">clic para abrir</span>
+          </summary>
+          <pre id="code-async-await" class="px-5 py-4 text-xs leading-relaxed overflow-x-auto"></pre>
+        </details>
+      </section>
+
+      <!-- RETO FINAL -->
+      <section id="page-reto-final" class="page-section hidden">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="bg-red-500/10 text-red-400 text-xs font-bold px-2 py-1 rounded">🏆</span>
+          <h2 class="text-xl font-bold">Reto Final: Super Explorador de APIs</h2>
+        </div>
+        <p class="text-slate-400 text-sm mb-4">Reúne todo lo aprendido en un solo lugar. Cada botón ejecuta un módulo distinto del taller.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="pp-card p-5 border-slate-700/50">
+            <h3 class="font-bold text-white mb-2">1️⃣ Un post</h3>
+            <button id="reto-post" class="pp-btn">Mostrar publicación</button>
+            <div id="reto-post-result" class="mt-3 text-sm text-slate-400">...</div>
+          </div>
+          <div class="pp-card p-5 border-slate-700/50">
+            <h3 class="font-bold text-white mb-2">2️⃣ Usuarios</h3>
+            <button id="reto-users" class="pp-btn">Mostrar 5 usuarios</button>
+            <div id="reto-users-result" class="mt-3 text-sm text-slate-400">...</div>
+          </div>
+          <div class="pp-card p-5 border-slate-700/50">
+            <h3 class="font-bold text-white mb-2">3️⃣ Info combinada (Promise.all)</h3>
+            <button id="reto-combined" class="pp-btn">Publicación + Autor + Comentarios</button>
+            <div id="reto-combined-result" class="mt-3 text-sm text-slate-400">...</div>
+          </div>
+          <div class="pp-card p-5 border-slate-700/50">
+            <h3 class="font-bold text-white mb-2">4️⃣ Detective de errores (allSettled)</h3>
+            <button id="reto-allsettled" class="pp-btn">Consultar varias publicaciones</button>
+            <div id="reto-allsettled-result" class="mt-3 text-sm text-slate-400">...</div>
+          </div>
+          <div class="pp-card p-5 border-slate-700/50">
+            <h3 class="font-bold text-white mb-2">5️⃣ Carrera (Promise.race)</h3>
+            <button id="reto-race" class="pp-btn">¿API o timeout?</button>
+            <div id="reto-race-result" class="mt-3 text-sm text-slate-400">...</div>
+          </div>
+          <div class="pp-card p-5 border-slate-700/50">
+            <h3 class="font-bold text-white mb-2">6️⃣ Primer ganador (Promise.any)</h3>
+            <button id="reto-any" class="pp-btn">Primer éxito</button>
+            <div id="reto-any-result" class="mt-3 text-sm text-slate-400">...</div>
+          </div>
+          <div class="pp-card p-5 border-slate-700/50">
+            <h3 class="font-bold text-white mb-2">7️⃣ Buscador (async/await)</h3>
+            <button id="reto-search" class="pp-btn">Buscar publicaciones del usuario 2</button>
+            <div id="reto-search-result" class="mt-3 text-sm text-slate-400">...</div>
+          </div>
+          <div class="pp-card p-5 border-slate-700/50">
+            <h3 class="font-bold text-white mb-2">8️⃣ Cámara</h3>
+            <p class="text-sm text-slate-400 mb-2">Ir al <a href="#videos" class="text-orange-400 underline" onclick="event.preventDefault();window.location.hash='videos'">Taller 9 · Cámara</a></p>
+          </div>
+          <div class="pp-card p-5 border-slate-700/50">
+            <h3 class="font-bold text-white mb-2">9️⃣ Reportes</h3>
+            <p class="text-sm text-slate-400 mb-2">Ir al <a href="#reportes" class="text-indigo-400 underline" onclick="event.preventDefault();window.location.hash='reportes'">Taller 10 · Reportes</a></p>
+          </div>
+          <div class="pp-card p-5 border-slate-700/50">
+            <h3 class="font-bold text-white mb-2">🔟 Ubicación</h3>
+            <p class="text-sm text-slate-400 mb-2">Ir al <a href="#geolocalizacion" class="text-teal-400 underline" onclick="event.preventDefault();window.location.hash='geolocalizacion'">Taller 11 · Geolocalización</a></p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <footer class="bg-slate-900/80 backdrop-blur border-t border-slate-800 py-6 mt-10">
+      <div class="max-w-5xl mx-auto px-4 text-center text-sm text-slate-500">
+        <p class="mb-1 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 font-semibold">🍕 Pizza Planet</p>
+        <p>Taller educativo: Promesas JavaScript + API gratuita + Tailwind CSS</p>
+      </div>
+    </footer>
+  </main>
+
+  <script src="./src/app.js"></script>
+</body>
+</html>

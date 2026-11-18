@@ -1,0 +1,4 @@
+node_modules/
+oracleJdk-26/
+server.log
+.env
